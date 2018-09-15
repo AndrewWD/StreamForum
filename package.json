@@ -11,7 +11,11 @@
     "clear": "rimraf dist",
     "build": "npm run clear && npm run build:client && npm run build:server",
     "lint": "eslint --ext .js --ext .jsx client/",
-    "precommmit": "npm run lint"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm lint"
+    }
   },
   "author": "Andrew",
   "license": "ISC",
