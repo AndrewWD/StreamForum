@@ -10,4 +10,8 @@ const presets = [
   "@babel/preset-react"
 ]
 
-module.exports = { presets }
+const plugins = [
+  ["react-hot-loader/babel"]
+]
+
+module.exports = { presets, plugins }
