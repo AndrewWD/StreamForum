@@ -20,6 +20,7 @@ const getTemplate = () => {
 
 const Module = module.constructor
 const mfs = new memoryFs()
+serverConfig.mode = 'development'
 const serverCompiler = webpack(serverConfig)
 serverCompiler.outputFileSystem = mfs
 serverCompiler.watch({}, (err, stats) => {
@@ -27,7 +28,7 @@ serverCompiler.watch({}, (err, stats) => {
   stats = stats.toJson()
   stats.errors.forEach(err => console.error(err))
   stats.warnings.forEach(warning => console.warn(warning))
-  
+
   const bundlePath = path.join(serverConfig.output.path, serverConfig.output.filename)
   const bundle = mfs.readFileSync(bundlePath, 'utf-8')
   const m = new Module()

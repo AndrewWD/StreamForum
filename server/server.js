@@ -1,11 +1,12 @@
 const express = require('express')
+const favicon = require('serve-favicon')
 const ReactSSR  = require('react-dom/server')
 const fs = require('fs')
 const path = require('path')
 
 const app = express()
+app.use(favicon(path.join(__dirname, '../favicon.ico')))
 const isDev = process.env.NODE_ENV === 'development'
-
 if (!isDev) {
   const serverEntry = require('../dist/server-entry').default
   const templateHtml = fs.readFileSync(path.join(__dirname, '../dist/index.html'), 'utf-8')
