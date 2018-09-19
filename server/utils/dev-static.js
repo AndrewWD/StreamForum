@@ -1,12 +1,12 @@
 const axios = require('axios')
 const path = require('path')
 const webpack = require('webpack')
-const memoryFs = require('memory-fs')
+const MemoryFs = require('memory-fs')
 const httpProxy = require('http-proxy-middleware')
 const ReactSSR = require('react-dom/server')
 const serverConfig = require('../../build/webpack.config.server')
 
-let serverEntry;
+let serverEntry
 
 const getTemplate = () => {
   return new Promise((resolve, reject) => {
@@ -19,7 +19,7 @@ const getTemplate = () => {
 }
 
 const Module = module.constructor
-const mfs = new memoryFs()
+const mfs = new MemoryFs()
 serverConfig.mode = 'development'
 const serverCompiler = webpack(serverConfig)
 serverCompiler.outputFileSystem = mfs
@@ -37,7 +37,7 @@ serverCompiler.watch({}, (err, stats) => {
 })
 
 module.exports = app => {
-  app.use('/public', httpProxy({target: 'http://localhost:8888'}))
+  app.use('/public', httpProxy({ target: 'http://localhost:8888' }))
   app.get('*', (req, res) => {
     getTemplate().then(template => {
       const content = ReactSSR.renderToString(serverEntry)

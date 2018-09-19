@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { hot } from 'react-hot-loader' // eslint-disable-line
 import { BrowserRouter as Router, Link } from 'react-router-dom'
+import { Provider } from 'mobx-react'
 import Routes from '../config/router'
+import appState from '../store/app-state'
 
 class App extends Component {
   componentDidMount() {
@@ -19,10 +21,12 @@ class App extends Component {
   }
 }
 
-const RouteContainer = () => (
-  <Router>
-    <App />
-  </Router>
+const Container = () => (
+  <Provider appState={appState}>
+    <Router>
+      <App />
+    </Router>
+  </Provider>
 )
 
-export default hot(module)(RouteContainer)
+export default hot(module)(Container)
