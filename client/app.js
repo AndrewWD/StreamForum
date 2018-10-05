@@ -1,5 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './views/App'
+import AppHot from './views/App'
 
-ReactDOM.hydrate(<App />, document.getElementById('root'))
+ReactDOM.hydrate(<AppHot />, document.getElementById('root'))

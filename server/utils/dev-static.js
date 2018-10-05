@@ -5,12 +5,15 @@ const MemoryFs = require('memory-fs')
 const httpProxy = require('http-proxy-middleware')
 const ReactSSR = require('react-dom/server')
 const serverConfig = require('../../build/webpack.config.server')
+const bootstrap = require('react-async-bootstrapper')
+const ejs = require('ejs')
+const serialize = require('serialize-javascript')
 
-let serverEntry
+let serverEntry, createStoreMap
 
 const getTemplate = () => {
   return new Promise((resolve, reject) => {
-    axios.get('http://localhost:8888/public/index.html')
+    axios.get('http://localhost:8888/public/server.ejs')
       .then(res => {
         resolve(res.data)
       })
@@ -34,14 +37,39 @@ serverCompiler.watch({}, (err, stats) => {
   const m = new Module()
   m._compile(bundle, 'serverEntry.js')
   serverEntry = m.exports.default
+  createStoreMap = m.exports.createStoreMap
 })
+
+const getStoreState = (stores) => Object.keys(stores)
+  .reduce((res, storeKey) => {
+    res[storeKey] = stores[storeKey].toJson()
+    return res
+  }, {})
 
 module.exports = app => {
   app.use('/public', httpProxy({ target: 'http://localhost:8888' }))
   app.get('*', (req, res) => {
     getTemplate().then(template => {
-      const content = ReactSSR.renderToString(serverEntry)
-      res.send(template.replace('<!-- app -->', content))
+      const stores = createStoreMap()
+      const routerContext = {}
+      const app = serverEntry(stores, routerContext, req.url)
+
+      bootstrap(app).then(() => {
+        if (routerContext.url) {
+          res.status(302).setHeader('Location', routerContext.url)
+          res.end()
+          return
+        }
+        const content = ReactSSR.renderToString(app)
+        const state = getStoreState(stores)
+
+        const html = ejs.render(template, {
+          appString: content,
+          initialState: serialize(state),
+        })
+
+        res.send(html)
+      })
     })
   })
 }

@@ -1,7 +1,7 @@
 const path = require('path')
 module.exports = {
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx'],
   },
   module: {
     rules: [
@@ -10,20 +10,20 @@ module.exports = {
         test: /.(js|jsx)$/,
         loader: 'eslint-loader',
         exclude: [
-          path.join(__dirname, '../node_modules')
-        ]
+          path.join(__dirname, '../node_modules'),
+        ],
       },
       {
         test: /.jsx$/,
-        loader: 'babel-loader'
+        loader: 'babel-loader',
       },
       {
         test: /.js$/,
         loader: 'babel-loader',
         exclude: [
           path.join(__dirname, '../node_modules')
-        ]
-      }
-    ]
+        ],
+      },
+    ],
   },
 }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { observer, inject } from 'mobx-react'
-import { AppState } from '../../store/app-state'
+import AppState from '../../store/app-state'
 
 @inject('appState') @observer
 class TopicList extends Component {
@@ -16,6 +16,16 @@ class TopicList extends Component {
 
   componentDidMount() {
 
+  }
+
+  bootstrap() {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const { appState } = this.props
+        appState.count = 3
+        resolve(true)
+      })
+    })
   }
 
   changeName(e) {

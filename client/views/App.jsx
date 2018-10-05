@@ -3,9 +3,9 @@ import { hot } from 'react-hot-loader' // eslint-disable-line
 import { BrowserRouter as Router, Link } from 'react-router-dom'
 import { Provider } from 'mobx-react'
 import Routes from '../config/router'
-import appState from '../store/app-state'
+import AppStateClass from '../store/app-state'
 
-class App extends Component {
+export class App extends Component {
   componentDidMount() {
 
   }
@@ -21,12 +21,15 @@ class App extends Component {
   }
 }
 
-const Container = () => (
-  <Provider appState={appState}>
-    <Router>
-      <App />
-    </Router>
-  </Provider>
-)
+const Container = () => {
+  const initialState = window.__INIT__STATE__.appState // eslint-disable-line
+  return (
+    <Provider appState={new AppStateClass(initialState)}>
+      <Router>
+        <App />
+      </Router>
+    </Provider>
+  )
+}
 
 export default hot(module)(Container)
