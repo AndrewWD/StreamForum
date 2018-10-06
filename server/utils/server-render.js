@@ -3,6 +3,10 @@ const ejs = require('ejs')
 const serialize = require('serialize-javascript')
 const bootstrap = require('react-async-bootstrapper')
 const Helmet = require('react-helmet').default
+const SheetsRegistry = require('react-jss/lib/jss').SheetsRegistry
+const createMuiTheme = require('@material-ui/core/styles').createMuiTheme
+const createGenerateClassName = require('@material-ui/core/styles').createGenerateClassName
+const colors = require('@material-ui/core/colors')
 
 const getStoreState = (stores) => Object.keys(stores)
   .reduce((res, storeKey) => {
@@ -15,8 +19,16 @@ module.exports = (bundle, template, req, res) => {
     const createStoreMap = bundle.createStoreMap
     const createApp = bundle.default
     const stores = createStoreMap()
+    const theme = createMuiTheme({
+      palette: {
+        primary: colors.blue,
+        secondary: colors.pink,
+      },
+    })
+    const sheetsRegistry = new SheetsRegistry()
+    const generateClassName = createGenerateClassName()
     const routerContext = {}
-    const app = createApp(stores, routerContext, req.url)
+    const app = createApp(stores, routerContext, sheetsRegistry, generateClassName, theme, req.url)
 
     bootstrap(app).then(() => {
       if (routerContext.url) {
@@ -35,6 +47,7 @@ module.exports = (bundle, template, req, res) => {
         title: helmet.title.toString(),
         style: helmet.style.toString(),
         link: helmet.link.toString(),
+        materialCss: sheetsRegistry.toString(),
       })
       res.send(html)
       resolve()
