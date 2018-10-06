@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { observer, inject } from 'mobx-react'
+import Helmet from 'react-helmet'
 import AppState from '../../store/app-state'
 
 @inject('appState') @observer
@@ -37,6 +38,10 @@ class TopicList extends Component {
     const { appState } = this.props
     return (
       <div>
+        <Helmet>
+          <title>This is topic list</title>
+          <meta name="description" content="This is description" />
+        </Helmet>
         <input onChange={this.changeName} />
         <div>{appState.msg}</div>
       </div>
