@@ -1,52 +1,79 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 import { observer, inject } from 'mobx-react'
 import Helmet from 'react-helmet'
-import Button from '@material-ui/core/Button'
-import AppState from '../../store/app-state'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
+// import AppState from '../../store/app-state'
+import TopicListItem from './list-item'
+import Container from '../layout/container'
 
 @inject('appState') @observer
 class TopicList extends Component {
-  static propTypes = {
-    appState: PropTypes.instanceOf(AppState).isRequired,
-  }
+  // static propTypes = {
+  //   appState: PropTypes.instanceOf(AppState).isRequired,
+  // }
 
   constructor() {
     super()
-    this.changeName = this.changeName.bind(this)
+    this.state = {
+      tabIndex: 0,
+      tabLabels: ['All', 'Share', 'Jobs', 'Q&A', 'Top', 'Test'],
+    }
+    this.changeTab = this.changeTab.bind(this)
+    this.clickListItem = this.clickListItem.bind(this)
   }
 
   componentDidMount() {
 
   }
 
-  bootstrap() {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const { appState } = this.props
-        appState.count = 3
-        resolve(true)
-      })
+  // bootstrap() {
+  //   return new Promise((resolve) => {
+  //     setTimeout(() => {
+  //       const { appState } = this.props
+  //       appState.count = 3
+  //       resolve(true)
+  //     })
+  //   })
+  // }
+
+  changeTab(e, index) {
+    this.setState({
+      tabIndex: index,
     })
   }
+  /* eslint-disable */
+  clickListItem() {
 
-  changeName(e) {
-    const { appState } = this.props
-    appState.name = e.target.value
   }
+  /* eslint-enable */
 
   render() {
-    const { appState } = this.props
+    // const { appState } = this.props
+    const { tabIndex, tabLabels } = this.state
+    const tabList = tabLabels.map(tabLabel => (
+      <Tab label={tabLabel} key={tabLabel} />
+    ))
+    const topic = {
+      title: 'This is title',
+      username: 'Andrew',
+      reply_count: 20,
+      visit_count: 3,
+      create_at: '18:30',
+      tab: 'Share',
+    }
     return (
-      <div>
+      <Container>
         <Helmet>
           <title>This is topic list</title>
           <meta name="description" content="This is description" />
         </Helmet>
-        <Button variant="contained" color="secondary">This is a test button</Button>
-        <input onChange={this.changeName} />
-        <div>{appState.msg}</div>
-      </div>
+        <Tabs value={tabIndex} onChange={this.changeTab}>
+          {tabList}
+        </Tabs>
+        <TopicListItem topic={topic} onClick={this.clickListItem} />
+      </Container>
     )
   }
 }
