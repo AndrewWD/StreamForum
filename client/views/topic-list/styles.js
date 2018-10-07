@@ -1,3 +1,5 @@
+import { amber } from '@material-ui/core/colors'
+
 export const topicPrimaryStyle = theme => ({
   root: {
     display: 'flex',
@@ -15,6 +17,12 @@ export const topicPrimaryStyle = theme => ({
     borderRadius: 3,
     marginRight: 10,
     fontSize: '12px',
+  },
+  good: {
+    backgroundColor: amber[500],
+  },
+  top: {
+    backgroundColor: theme.palette.secondary[500],
   },
 })
 

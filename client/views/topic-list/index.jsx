@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { observer, inject } from 'mobx-react'
 import Helmet from 'react-helmet'
+import queryString from 'query-string'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import List from '@material-ui/core/List'
@@ -15,19 +16,29 @@ import Container from '../layout/container'
   topicStore: stores.topicStore,
 })) @observer
 class TopicList extends Component {
+  static contextTypes = {
+    router: PropTypes.object,
+  }
+
   constructor() {
     super()
     this.state = {
-      tabIndex: 0,
-      tabLabels: ['All', 'Share', 'Job', 'Ask', 'Top', 'Test'],
+      tabLabels: ['all', 'share', 'job', 'ask', 'good', 'dev'],
     }
     this.changeTab = this.changeTab.bind(this)
     this.clickListItem = this.clickListItem.bind(this)
   }
 
   componentDidMount() {
+    const tab = this.getTab()
     const { topicStore } = this.props
-    topicStore.fetchTopics()
+    topicStore.fetchTopics(tab)
+  }
+
+  getTab() {
+    const { location } = this.props
+    const query = queryString.parse(location.search)
+    return query.tab || 'all'
   }
 
   bootstrap() {
@@ -40,10 +51,14 @@ class TopicList extends Component {
     })
   }
 
-  changeTab(e, index) {
-    this.setState({
-      tabIndex: index,
+  changeTab(e, value) {
+    const { router } = this.context
+    const { topicStore } = this.props
+    router.history.push({
+      pathname: '/list',
+      search: `?tab=${value}`,
     })
+    topicStore.fetchTopics(value)
   }
   /* eslint-disable */
   clickListItem() {
@@ -53,19 +68,21 @@ class TopicList extends Component {
 
   render() {
     const { topicStore } = this.props
-    const { tabIndex, tabLabels } = this.state
-    const tabList = tabLabels.map(tabLabel => (
-      <Tab label={tabLabel} key={tabLabel} />
-    ))
+    const { tabLabels } = this.state
     const { topics, loading } = topicStore
+    const tabValue = this.getTab()
     return (
       <Container>
         <Helmet>
           <title>This is topic list</title>
           <meta name="description" content="This is description" />
         </Helmet>
-        <Tabs value={tabIndex} onChange={this.changeTab}>
-          {tabList}
+        <Tabs value={tabValue} onChange={this.changeTab}>
+          {
+            tabLabels.map(tabLabel => (
+              <Tab label={tabLabel} value={tabLabel} key={tabLabel} />
+            ))
+          }
         </Tabs>
         <List>
           {
@@ -76,8 +93,14 @@ class TopicList extends Component {
         </List>
         {
           loading ? (
-            <div>
-              <CircularProgress color="secondary" size={100} />
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-around',
+                padding: '40px 0',
+              }}
+            >
+              <CircularProgress color="primary" size={70} />
             </div>
           ) : null
         }
@@ -90,6 +113,10 @@ class TopicList extends Component {
 TopicList.wrappedComponent.propTypes = {
   appState: PropTypes.instanceOf(AppState).isRequired,
   topicStore: PropTypes.instanceOf(TopicStore).isRequired,
+}
+
+TopicList.propTypes = {
+  location: PropTypes.object.isRequired,
 }
 
 export default TopicList

@@ -22,12 +22,13 @@ class TopicStore {
     this.loading = loading
   }
 
-  @action fetchTopics() {
+  @action fetchTopics(tab) {
     return new Promise((resolve, reject) => {
       this.loading = true
       this.topics = []
-      get('/topics', {
+      get('topics', {
         mdrender: false,
+        tab,
       }).then((resp) => {
         if (resp.success) {
           resp.data.forEach((topic) => {
