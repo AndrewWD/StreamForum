@@ -71,7 +71,7 @@ class MainAppBar extends React.Component {
             </Button>
             <Button variant="flat" color="inherit" onClick={this.loginButtonClick}>
               {
-                appState.user.isLogin ? appState.user.info.loginname : 'Sign In'
+                appState.user.info.loginname || 'Sign In'
               }
             </Button>
           </Toolbar>

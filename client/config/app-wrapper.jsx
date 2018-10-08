@@ -2,7 +2,7 @@ import React from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { Provider } from 'mobx-react'
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
-import { blue, pink } from '@material-ui/core/colors'
+import { indigo, pink } from '@material-ui/core/colors'
 import { AppState, TopicStore } from '../store/store'
 import App from '../views/App'
 
@@ -26,7 +26,7 @@ const Container = () => {
   // const initialState = window.__INIT__STATE__.appState // eslint-disable-line
   const theme = createMuiTheme({
     palette: {
-      primary: blue,
+      primary: indigo,
       secondary: pink,
     },
   })
