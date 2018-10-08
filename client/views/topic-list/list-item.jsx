@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import cx from 'classnames'
+import dataFormat from 'dataformat'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -41,7 +42,7 @@ const Secondary = ({ classes, topic }) => (
       <span>/</span>
       <span>{topic.visit_count}</span>
     </span>
-    <span>{`created time: ${topic.create_at}`}</span>
+    <span>{`created time: ${dataFormat(topic.create_at)}`}</span>
   </span>
 )
 

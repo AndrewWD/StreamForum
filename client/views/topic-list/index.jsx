@@ -60,11 +60,11 @@ class TopicList extends Component {
     })
     topicStore.fetchTopics(value)
   }
-  /* eslint-disable */
-  clickListItem() {
 
+  clickListItem(topic) {
+    const { router } = this.context
+    router.history.push(`/detail/${topic.id}`)
   }
-  /* eslint-enable */
 
   render() {
     const { topicStore } = this.props
@@ -87,7 +87,11 @@ class TopicList extends Component {
         <List>
           {
             topics.map(topic => (
-              <TopicListItem topic={topic} key={topic.id} onClick={this.clickListItem} />
+              <TopicListItem
+                topic={topic}
+                key={topic.id}
+                onClick={() => this.clickListItem(topic)}
+              />
             ))
           }
         </List>

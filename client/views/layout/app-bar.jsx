@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { inject, observer } from 'mobx-react'
 import { withStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -17,9 +18,15 @@ const styles = {
   },
 }
 
+@inject(stores => ({
+  appState: stores.appState,
+})) @observer
 class MainAppBar extends React.Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
+  }
+  static contextTypes = {
+    router: PropTypes.object,
   }
   constructor() {
     super()
@@ -28,23 +35,27 @@ class MainAppBar extends React.Component {
     this.loginButtonClick = this.loginButtonClick.bind(this)
   }
 
-  /* eslint-disable */
   onHomeIconClick() {
-
+    const { router } = this.context
+    router.history.push('/list')
   }
-
+  /* eslint-disable */
   createButtonClick() {
 
   }
-
+  /* eslint-enable */
   loginButtonClick() {
-
+    const { router } = this.context
+    const { appState } = this.props
+    if (appState.user.isLogin) {
+      router.history.push('/user/info')
+    } else {
+      router.history.push('/user/login')
+    }
   }
 
-  /* eslint-enable */
-
   render() {
-    const { classes } = this.props // eslint-disable-line
+    const { classes, appState } = this.props // eslint-disable-line
     return (
       <div className={classes.root}>
         <AppBar position="fixed">
@@ -59,13 +70,19 @@ class MainAppBar extends React.Component {
               New Topic
             </Button>
             <Button variant="flat" color="inherit" onClick={this.loginButtonClick}>
-              Sign In
+              {
+                appState.user.isLogin ? appState.user.info.loginname : 'Sign In'
+              }
             </Button>
           </Toolbar>
         </AppBar>
       </div>
     )
   }
+}
+
+MainAppBar.wrappedComponent.propTypes = {
+  appState: PropTypes.object.isRequired,
 }
 
 export default withStyles(styles)(MainAppBar)

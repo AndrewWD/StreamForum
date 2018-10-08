@@ -22,8 +22,8 @@ export const get = (url, params) => (
   })
 )
 
-export const post = (url, params) => (
-  new Promise((resolve, reject, postData) => {
+export const post = (url, params, postData) => (
+  new Promise((resolve, reject) => {
     axios.post(parseUrl(url, params), postData)
       .then((resp) => {
         const { data } = resp
