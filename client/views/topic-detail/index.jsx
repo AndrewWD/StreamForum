@@ -138,14 +138,14 @@ class TopicDetail extends React.Component {
                       placeholder: 'Your reply...',
                     }}
                   />
-                  <Button variant="fab" color="primary" onClick={this.doReply} className={classes.replyButton}>
+                  <Button variant="fab" color="secondary" onClick={this.doReply} className={classes.replyButton}>
                     <IconReply />
                   </Button>
                 </section>
               )
               : (
                 <section className={classes.notLoginButton}>
-                  <Button variant="contained" color="primary" onClick={this.clickNotLoginButton}>Login and Reply</Button>
+                  <Button variant="contained" color="secondary" onClick={this.clickNotLoginButton}>Login and Reply</Button>
                 </section>
               )
           }

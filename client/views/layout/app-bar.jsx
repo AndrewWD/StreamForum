@@ -16,6 +16,9 @@ const styles = {
   flex: {
     flexGrow: 1,
   },
+  createButton: {
+    margin: '0 5px',
+  },
 }
 
 @inject(stores => ({
@@ -39,11 +42,12 @@ class MainAppBar extends React.Component {
     const { router } = this.context
     router.history.push('/list')
   }
-  /* eslint-disable */
-  createButtonClick() {
 
+  createButtonClick() {
+    const { router } = this.context
+    router.history.push('/topic/create')
   }
-  /* eslint-enable */
+
   loginButtonClick() {
     const { router } = this.context
     const { appState } = this.props
@@ -66,7 +70,7 @@ class MainAppBar extends React.Component {
             <Typography type="title" color="inherit" className={classes.flex}>
               Stream
             </Typography>
-            <Button variant="text" color="inherit" onClick={this.createButtonClick}>
+            <Button variant="contained" color="secondary" onClick={this.createButtonClick} className={classes.createButton}>
               New Topic
             </Button>
             <Button variant="flat" color="inherit" onClick={this.loginButtonClick}>

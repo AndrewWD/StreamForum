@@ -8,11 +8,9 @@ export default class AppState {
     detail: {
       recentTopics: [],
       recentReplies: [],
-      loading: false,
     },
     collections: {
       list: [],
-      loading: false,
     },
   }
 
@@ -33,7 +31,6 @@ export default class AppState {
   }
 
   @action getUserDetail() {
-    this.user.detail.loading = true
     return new Promise((resolve, reject) => {
       get(`user/${this.user.info.loginname}`)
         .then((resp) => {
@@ -44,16 +41,13 @@ export default class AppState {
           } else {
             reject()
           }
-          this.user.detail.loading = false
         }).catch((err) => {
-          this.user.detail.laoding = false
           reject(err)
         })
     })
   }
 
   @action getUserCollection() {
-    this.user.collections.loading = true
     return new Promise((resolve, reject) => {
       get(`topic_collect/${this.user.info.loginname}`)
         .then((resp) => {
@@ -63,9 +57,7 @@ export default class AppState {
           } else {
             reject()
           }
-          this.user.collections.loading = false
         }).catch((err) => {
-          this.user.collections.laoding = false
           reject(err)
         })
     })

@@ -59,7 +59,7 @@ export const topicDetailStyle = theme => ({
     right: 40,
     bottom: 65,
     zIndex: 101,
-    opacity: 0.1,
+    opacity: 0.5,
     transition: 'opacity .3s',
     '&:hover': {
       opacity: 1,

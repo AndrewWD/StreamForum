@@ -30,3 +30,5 @@ export const replySchema = {
   reply_id: null,
   is_uped: false,
 }
+
+export const tabLabels = ['all', 'share', 'job', 'ask', 'good', 'dev']

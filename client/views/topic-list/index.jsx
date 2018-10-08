@@ -10,6 +10,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import { AppState, TopicStore } from '../../store/store'
 import TopicListItem from './list-item'
 import Container from '../layout/container'
+import { tabLabels } from '../../utils/variable-define'
 
 @inject(stores => ({
   appState: stores.appState,
@@ -22,9 +23,6 @@ class TopicList extends Component {
 
   constructor() {
     super()
-    this.state = {
-      tabLabels: ['all', 'share', 'job', 'ask', 'good', 'dev'],
-    }
     this.changeTab = this.changeTab.bind(this)
     this.clickListItem = this.clickListItem.bind(this)
   }
@@ -68,7 +66,6 @@ class TopicList extends Component {
 
   render() {
     const { topicStore } = this.props
-    const { tabLabels } = this.state
     const { topics, loading } = topicStore
     const tabValue = this.getTab()
     return (

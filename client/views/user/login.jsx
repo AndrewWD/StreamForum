@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Redirect } from 'react-router-dom'
 import { inject, observer } from 'mobx-react'
+import queryString from 'query-string'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import { withStyles } from '@material-ui/core/styles'
@@ -34,6 +36,12 @@ class UserLogin extends React.Component {
     }
   }
 
+  getFrom() {
+    const { location } = this.props
+    const query = queryString.parse(location.search)
+    return query.from || '/list'
+  }
+
   handleInput(e) {
     this.setState({
       accesstoken: e.target.value.trim(),
@@ -43,7 +51,6 @@ class UserLogin extends React.Component {
   handleLogin() {
     const { accesstoken } = this.state
     const { appState } = this.props
-    const { router } = this.context
     if (!accesstoken) {
       this.setState({
         helpText: 'AccessToken is Required',
@@ -53,17 +60,19 @@ class UserLogin extends React.Component {
         helpText: '',
       })
       appState.login(accesstoken)
-        .then(() => {
-          router.history.replace('/user/info')
-        }).catch((err) => {
+        .catch((err) => {
           console.log(err)
         })
     }
   }
 
   render() {
-    const { classes } = this.props
+    const { classes, user } = this.props
     const { helpText, accesstoken } = this.state
+    const from = this.getFrom()
+    if (user.isLogin) {
+      return <Redirect to={from} />
+    }
     return (
       <UserWrapper>
         <div className={classes.root}>
@@ -92,6 +101,7 @@ class UserLogin extends React.Component {
 
 UserLogin.propTypes = {
   classes: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
 }
 
 UserLogin.wrappedComponent.propTypes = {

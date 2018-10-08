@@ -40,6 +40,7 @@ class TopicStore {
   @observable topics
   @observable details
   @observable loading
+  @observable createdTopics = []
 
   constructor({ topics = [], details = [], loading = false } = {}) {
     this.topics = topics.map(topic => new Topic(fillTopicFields(topic)))
@@ -63,9 +64,7 @@ class TopicStore {
         tab,
       }).then((resp) => {
         if (resp.success) {
-          resp.data.forEach((topic) => {
-            this.topics.push(new Topic(fillTopicFields(topic)))
-          })
+          this.topics = resp.data.map(topic => new Topic(fillTopicFields(topic)))
           resolve()
         } else {
           reject()
@@ -95,6 +94,29 @@ class TopicStore {
           }
         }).catch(reject)
       }
+    })
+  }
+
+  @action createTopic(title, content, tab) {
+    return new Promise((resolve, reject) => {
+      post('/topics', {
+        needAccessToken: true,
+      }, { title, content, tab })
+        .then((resp) => {
+          if (resp.success) {
+            const topic = {
+              title,
+              content,
+              tab,
+              id: resp.topic_id,
+              create_at: Date.now(),
+            }
+            this.createdTopics.push(new Topic(fillTopicFields(topic)))
+            resolve()
+          } else {
+            reject()
+          }
+        }).catch(reject)
     })
   }
 }

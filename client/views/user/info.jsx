@@ -43,14 +43,9 @@ class UserInfo extends React.Component {
   }
 
   componentWillMount() {
-    const { user, appState } = this.props
-    const { router } = this.context
-    if (!user.isLogin) {
-      router.history.replace('/user/login')
-    } else {
-      appState.getUserDetail()
-      appState.getUserCollection()
-    }
+    const { appState } = this.props
+    appState.getUserDetail()
+    appState.getUserCollection()
   }
 
   onClickTopic(id) {
