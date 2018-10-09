@@ -111,6 +111,7 @@ class TopicCreate extends React.Component {
             onChange={this.handleTitleChange}
           />
           <SimpleMDE
+            id="topic-create"
             onChange={this.handleContentChange}
             value={content}
             options={{

@@ -19,11 +19,11 @@ class Main extends React.Component {
   }
 }
 
-const appState = new AppState()
-const topicStore = new TopicStore()
-
 const Container = () => {
-  // const initialState = window.__INIT__STATE__.appState // eslint-disable-line
+  const initialState = window.__INIT__STATE__ // eslint-disable-line
+  const appState = new AppState()
+  appState.init(initialState.appState)
+  const topicStore = new TopicStore(initialState.topicStore)
   const theme = createMuiTheme({
     palette: {
       primary: indigo,

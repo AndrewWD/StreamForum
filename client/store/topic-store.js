@@ -1,4 +1,4 @@
-import { observable, extendObservable, action, computed } from 'mobx'
+import { observable, extendObservable, action, computed, toJS } from 'mobx'
 import { topicSchema, replySchema } from '../utils/variable-define'
 import { get, post } from '../utils/http'
 
@@ -41,11 +41,13 @@ class TopicStore {
   @observable details
   @observable loading
   @observable createdTopics = []
+  @observable tab
 
-  constructor({ topics = [], details = [], loading = false } = {}) {
+  constructor({ topics = [], details = [], tab = null, loading = false } = {}) {
     this.topics = topics.map(topic => new Topic(fillTopicFields(topic)))
     this.details = details.map(detail => new Topic(fillTopicFields(detail)))
     this.loading = loading
+    this.tab = tab
   }
 
   @computed get detailMap() {
@@ -57,23 +59,28 @@ class TopicStore {
 
   @action fetchTopics(tab) {
     return new Promise((resolve, reject) => {
-      this.loading = true
-      this.topics = []
-      get('topics', {
-        mdrender: false,
-        tab,
-      }).then((resp) => {
-        if (resp.success) {
-          this.topics = resp.data.map(topic => new Topic(fillTopicFields(topic)))
-          resolve()
-        } else {
-          reject()
-        }
-        this.loading = false
-      }).catch((err) => {
-        reject(err)
-        this.loading = false
-      })
+      if (tab === this.tab) {
+        resolve()
+      } else {
+        this.tab = tab
+        this.loading = true
+        this.topics = []
+        get('topics', {
+          mdrender: false,
+          tab,
+        }).then((resp) => {
+          if (resp.success) {
+            this.topics = resp.data.map(topic => new Topic(fillTopicFields(topic)))
+            resolve()
+          } else {
+            reject()
+          }
+          this.loading = false
+        }).catch((err) => {
+          reject(err)
+          this.loading = false
+        })
+      }
     })
   }
 
@@ -118,6 +125,15 @@ class TopicStore {
           }
         }).catch(reject)
     })
+  }
+
+  toJSON() {
+    return {
+      topics: toJS(this.topics),
+      details: toJS(this.details),
+      loading: this.loading,
+      tab: this.tab,
+    }
   }
 }
 

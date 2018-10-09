@@ -7,13 +7,11 @@ import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import List from '@material-ui/core/List'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import { AppState, TopicStore } from '../../store/store'
 import TopicListItem from './list-item'
 import Container from '../layout/container'
 import { tabLabels } from '../../utils/variable-define'
 
 @inject(stores => ({
-  appState: stores.appState,
   topicStore: stores.topicStore,
 })) @observer
 class TopicList extends Component {
@@ -40,13 +38,12 @@ class TopicList extends Component {
   }
 
   bootstrap() {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const { appState } = this.props
-        appState.count = 3
-        resolve(true)
-      })
-    })
+    const { topicStore, location } = this.props
+    const query = queryString.parse(location.search)
+    const tab = query.tab || 'all'
+    return topicStore.fetchTopics(tab)
+      .then(() => true)
+      .catch(() => false)
   }
 
   changeTab(e, value) {
@@ -112,8 +109,7 @@ class TopicList extends Component {
 }
 
 TopicList.wrappedComponent.propTypes = {
-  appState: PropTypes.instanceOf(AppState).isRequired,
-  topicStore: PropTypes.instanceOf(TopicStore).isRequired,
+  topicStore: PropTypes.object.isRequired,
 }
 
 TopicList.propTypes = {

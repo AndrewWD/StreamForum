@@ -59,7 +59,7 @@ class MainAppBar extends React.Component {
   }
 
   render() {
-    const { classes, appState } = this.props // eslint-disable-line
+    const { classes, appState } = this.props
     return (
       <div className={classes.root}>
         <AppBar position="fixed">

@@ -129,6 +129,7 @@ class TopicDetail extends React.Component {
               ? (
                 <section className={classes.replyEditor}>
                   <SimpleMDE
+                    id="topic-detail"
                     onChange={this.handleNewReplyChange}
                     value={newReply}
                     options={{

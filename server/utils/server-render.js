@@ -6,29 +6,36 @@ const Helmet = require('react-helmet').default
 const SheetsRegistry = require('react-jss/lib/jss').SheetsRegistry
 const createMuiTheme = require('@material-ui/core/styles').createMuiTheme
 const createGenerateClassName = require('@material-ui/core/styles').createGenerateClassName
-const colors = require('@material-ui/core/colors')
+const indigo = require('@material-ui/core/colors').indigo
+const pink = require('@material-ui/core/colors').pink
 
 const getStoreState = (stores) => Object.keys(stores)
   .reduce((res, storeKey) => {
-    res[storeKey] = stores[storeKey].toJson()
+    res[storeKey] = stores[storeKey].toJSON()
     return res
   }, {})
 
 module.exports = (bundle, template, req, res) => {
   return new Promise((resolve, reject) => {
+    const user = req.session.user
     const createStoreMap = bundle.createStoreMap
     const createApp = bundle.default
     const stores = createStoreMap()
+    if (user) {
+      stores.appState.user.isLogin = true
+      stores.appState.user.info = user
+    }
     const theme = createMuiTheme({
       palette: {
-        primary: colors.blue,
-        secondary: colors.pink,
+        primary: indigo,
+        secondary: pink,
       },
     })
     const sheetsRegistry = new SheetsRegistry()
+    const sheetsManager = new Map()
     const generateClassName = createGenerateClassName()
     const routerContext = {}
-    const app = createApp(stores, routerContext, sheetsRegistry, generateClassName, theme, req.url)
+    const app = createApp(stores, routerContext, sheetsRegistry, sheetsManager, generateClassName, theme, req.url)
 
     bootstrap(app).then(() => {
       if (routerContext.url) {
